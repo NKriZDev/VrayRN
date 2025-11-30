@@ -1,45 +1,39 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React from "react";
+import { Button, NativeModules, Text, View } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+const { V2RayCore } = NativeModules;
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
+export default function App() {
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1, justifyContent: "center", padding: 24 }}>
+          <Text style={{ marginBottom: 12 }}>libxray bridge test</Text>
+
+          <Button
+            title="Start core (hardcoded)"
+            onPress={() => V2RayCore.startHardcoded()}
+          />
+
+          <View style={{ height: 12 }} />
+
+          <Button
+            title="Stop core"
+            onPress={() => V2RayCore.stop()}
+          />
+
+          <View style={{ height: 12 }} />
+
+          <Button
+            title="Start VPN (skeleton)"
+            onPress={async () => {
+              const r = await V2RayCore.startVpn();
+              console.log("startVpn result:", r);
+            }}
+          />
+        </View>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
-
-export default App;
